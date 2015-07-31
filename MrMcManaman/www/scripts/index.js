@@ -1,11 +1,4 @@
-﻿// For an introduction to the Blank template, see the following documentation:
-// http://go.microsoft.com/fwlink/?LinkID=397704
-// To debug code on page load in Ripple or on Android devices/emulators: launch your app, set breakpoints, 
-// and then run "window.location.reload()" in the JavaScript Console.
-
-
-
-(function () {
+﻿(function () {
     "use strict";
 
     var MCMANAMAN = {};
@@ -13,7 +6,6 @@
     MCMANAMAN.game = (function () {
 
         var ctx;
-
         var canvasHeight = screen.height;
         var canvasWidth = screen.width;
 
@@ -37,7 +29,10 @@
         var myRect = [];
         var limitRectangles = [];
 
+        var isGameOver = false;
+
         function startGame() {
+            isGameOver = false;
             FillRectangleArray();
             selectPlayer();
             gameLoop();
@@ -134,7 +129,7 @@
         }
 
         function setDirection(newDirection) {
-
+           
             var playerPositionIndex;
             var opponentPositionIndex;
 
@@ -154,14 +149,20 @@
                 case 'left':
                     break;
                 case 'right':
+                    if (isGameOver)
+                        return;
                     movePlayer(playerPositionIndex, playerMovementX);
                     moveOpponent(opponentPositionIndex, playerMovementX)
                     break;
                 case 'up':
+                    if (isGameOver)
+                        return;
                     movePlayer(playerPositionIndex, -playerMovementY);
                     moveOpponent(opponentPositionIndex, -playerMovementY)
                     break;
                 case 'down':
+                    if (isGameOver)
+                        return;
                     movePlayer(playerPositionIndex, playerMovementY);
                     moveOpponent(opponentPositionIndex, playerMovementY)
                     break;
@@ -237,6 +238,7 @@
         }
 
         function GameOver() {
+            isGameOver = true;
             ctx.save();
             myRect = [];
             ctx.clearRect(0, 0, screen.width, screen.height);
@@ -259,6 +261,7 @@
         }
 
         function GameWon() {
+            isGameOver = true;
             ctx.save();
             myRect = [];
             ctx.clearRect(0, 0, screen.width, screen.height);
