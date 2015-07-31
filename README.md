@@ -1,0 +1,2 @@
+# MrManaman
+Cordova Apache version
