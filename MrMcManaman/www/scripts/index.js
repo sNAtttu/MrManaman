@@ -55,8 +55,9 @@
                 var obstaclePosition = Math.floor((Math.random() * blockAmount) + 1)
                 if (obstaclePosition != playerStartPosition && obstaclePosition != opponentPosition)
                     obstaclePositions.push(obstaclePosition);
-                    }
-                    
+                
+            }
+
             for (var i = 1; i <= blockAmount; i++) {
                 myRect.push(new RectShape(blockPositionX, blockPositionY, blockWidth, blockHeight, blockFill, i))
 
@@ -76,14 +77,13 @@
         // Function for making playground and after that we fill canvas(playground) with rectangles
         function createCanvas() {
             var canvas = document.createElement('canvas');
-            canvas.addEventListener("Touch", startGame, false)
+            canvas.addEventListener("click", startGame, false);
             canvas.id = "gameCanvas";
             canvas.height = canvasHeight;
             canvas.width = canvasWidth;
             document.body.appendChild(canvas);
 
             var canv = document.getElementById("gameCanvas");
-
             if (canv.getContext) {
                 ctx = canv.getContext('2d'); //get the context
                 ctx.clearRect(0, 0, screen.width, screen.height);
@@ -213,13 +213,6 @@
             setTimeout(gameLoop, frameLength); //do it all again
         }
 
-        function checkIfObstacle(index) {
-            for (var i = 0; i < obstaclePositions.length; i++) {
-                if (index === obstaclePositions[i])
-                    return true;
-                return false;
-            }
-        }
         // Our one rectangle
         function RectShape(x, y, w, h, fill, index) {
             this.x = x;
@@ -228,18 +221,15 @@
             this.height = h;
             this.fill = fill;
             this.index = index;
-
+            this.isObstacle = false;
             if (index === playerStartPosition) {
                 this.isPlayer = true;
             }
             else if (index === opponentPosition)
                 this.isOpponent = true;
-            else if (checkIfObstacle)
-                this.isObstacle = true;
             else {
                 this.isPlayer = false;
                 this.isOpponent = false;
-                this.isObstacle = false;
             }
         }
         // function for drawing one rectangle oRec. Different rectangles are in different colors. TODO: GRAPHICS AND ANIMATIONS (Colors should
@@ -261,6 +251,10 @@
         function drawAllRectangles() {
             for (var i in myRect) {
                 var oRec = myRect[i];
+                for (var i in obstaclePositions) {
+                    if (oRec.index == obstaclePositions[i])
+                        oRec.isObstacle = true;
+                }
                 drawRectangle(oRec);
             }
         }
