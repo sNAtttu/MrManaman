@@ -24,7 +24,7 @@
 
         var obstaclePositions = [];
         var obstacleAmount = blockAmount / playerMovementY;
-        
+
         var opponentPosition = playerStartPosition + (playerMovementX * 2);
 
         var frameLength = 100;
@@ -95,6 +95,7 @@
         function CheckIfOverlaps() {
             var playerIndex;
             var opponentIndex;
+            
 
             for (var i = 0; i < myRect.length; i++) {
                 if (myRect[i].isOpponent == true)
@@ -102,6 +103,12 @@
                 if (myRect[i].isPlayer == true)
                     playerIndex = myRect[i].index;
             }
+            for (var i in obstaclePositions) {
+                if (opponentIndex == obstaclePositions[i]) {
+                    console.log(opponentIndex);
+                }
+            }
+
             if (playerIndex == opponentIndex)
                 GameWon();
         }
@@ -157,7 +164,7 @@
 
             playerPositionIndex = playerPositionIndex - 1; //because array is from 0 to 8
             opponentPositionIndex = opponentPositionIndex - 1; // because of thing above this text
-
+            
             switch (newDirection) {
                 case 'left':
                     break;
@@ -192,8 +199,7 @@
             if (playerPositionIndex + steps < 1 || playerPositionIndex + steps > playerMoveLimit)
                 myRect[0].isPlayer = true;
             else
-                myRect[(playerPositionIndex + steps)].isPlayer = true;
-            CheckIfOverlaps();
+                myRect[(playerPositionIndex + steps)].isPlayer = true;          
         }
 
         function moveOpponent(opponentPositionIndex, steps) {
@@ -207,9 +213,10 @@
             }
 
         }
-        // This function is our gameloop, this goes over and over and over and over again
+        // This function is our gameloop, this goes over and over and over and over again. She does all drawing and overlap checking.
         function gameLoop() {
             drawAllRectangles();
+            CheckIfOverlaps();
             setTimeout(gameLoop, frameLength); //do it all again
         }
 
