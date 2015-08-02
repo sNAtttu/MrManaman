@@ -40,6 +40,7 @@
             if (!isGameOver)
                 return;
             isGameOver = false;
+            myRect = [];
             FillRectangleArray(); // Fill array with rectangles which act as a one step in game
             gameLoop(); // Looooooop which draws our rectangles all over again
         }
@@ -76,7 +77,6 @@
         // Function for making playground and after that we fill canvas(playground) with rectangles
         function createCanvas() {
             var canvas = document.createElement('canvas');
-            canvas.addEventListener("click", startGame, false);
             canvas.id = "gameCanvas";
             canvas.height = canvasHeight;
             canvas.width = canvasWidth;
@@ -107,6 +107,9 @@
                     myRect[opponentPositionIndex].isObstacle = false;
                     obstaclePositions.splice(i, 1);
                     moveOpponent(opponentPositionIndex, -1);
+                }
+                else if (playerPositionIndex == obstaclePositions[i]) {
+                    GameOver();
                 }
             }
             if (isGameOver == false && playerPositionIndex === opponentPositionIndex) {
@@ -257,8 +260,8 @@
         // GameOver screen
         function GameOver() {
             isGameOver = true;
-            ctx.save();
             myRect = [];
+            obstaclePositions = [];
             ctx.clearRect(0, 0, screen.width, screen.height);
             ctx.fillStyle = '#fe57a1';
             ctx.fillRect(0, 0, canvasWidth, canvasHeight); //fill a rectangle (x, y, width, height) 
@@ -275,13 +278,12 @@
             ctx.font = 'bold 36px sans-serif';
             ctx.strokeText('Press space to restart', centreX, centreY + 50);
             ctx.fillText('Press space to restart', centreX, centreY + 50);
-            ctx.restore();
         }
         // GameWon screen
         function GameWon() {
             isGameOver = true;
-            ctx.save();
             myRect = [];
+            obstaclePositions = [];
             ctx.clearRect(0, 0, screen.width, screen.height);
             ctx.fillStyle = '#fe57a1';
             ctx.fillRect(0, 0, canvasWidth, canvasHeight); //fill a rectangle (x, y, width, height) 
@@ -298,11 +300,11 @@
             ctx.font = 'bold 36px sans-serif';
             ctx.strokeText('Press space to restart', centreX, centreY + 50);
             ctx.fillText('Press space to restart', centreX, centreY + 50);
-            ctx.restore();
         }
         // The name tells it all
         function restart() {
             myRect = [];
+            obstaclePositions = [];
             blockPositionX = 10;
             blockPositionY = 10;
             blockWidth = canvasWidth / 10;
