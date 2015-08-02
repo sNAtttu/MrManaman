@@ -41,7 +41,6 @@
                 return;
             isGameOver = false;
             FillRectangleArray(); // Fill array with rectangles which act as a one step in game
-            selectPlayer(); // Select player step
             gameLoop(); // Looooooop which draws our rectangles all over again
         }
 
@@ -58,11 +57,11 @@
                 
             }
 
-            for (var i = 1; i <= blockAmount; i++) {
+            for (var i = 0; i <= blockAmount; i++) {
                 myRect.push(new RectShape(blockPositionX, blockPositionY, blockWidth, blockHeight, blockFill, i))
 
                 // if we have our last rectangle in x line
-                if (i % playerMovementY == 0) {
+                if (i % playerMovementY == 0  && i != 0) {
                     limitRectangles.push(new RectShape(blockPositionX, blockPositionY, blockWidth, blockHeight, blockFill, i));
                     blockPositionY += blockHeight + gap;
                     blockPositionX = 10;
@@ -93,39 +92,32 @@
         }
         // Function which checks if rectangles collide
         function CheckIfOverlaps() {
-            var playerIndex;
-            var opponentIndex;
+            var playerPositionIndex;
+            var opponentPositionIndex;
             
-
             for (var i = 0; i < myRect.length; i++) {
                 if (myRect[i].isOpponent == true)
-                    opponentIndex = myRect[i].index;
+                    opponentPositionIndex = myRect[i].index;
                 if (myRect[i].isPlayer == true)
-                    playerIndex = myRect[i].index;
-            }
-            for (var i in obstaclePositions) {
-                if (opponentIndex == obstaclePositions[i]) {
-                    console.log(opponentIndex);
-                }
+                    playerPositionIndex = myRect[i].index;
             }
 
-            if (playerIndex == opponentIndex)
+            for (var i in obstaclePositions) {
+                if (opponentPositionIndex == obstaclePositions[i]) {
+                    myRect[opponentPositionIndex].isObstacle = false;
+                    obstaclePositions.splice(i, 1);
+                    moveOpponent(opponentPositionIndex, -1);
+                }
+            }
+            if (isGameOver == false && playerPositionIndex === opponentPositionIndex) {
                 GameWon();
+            }
         }
         // Function which checks if our player or opponent are outside of playground
         function CheckIfOverLimits(opponentCurrentIndex) {
             for (var i in limitRectangles) {
                 if (limitRectangles[i].index == opponentCurrentIndex)
                     GameOver();
-            }
-        }
-
-        // Function which selects our player
-        function selectPlayer() {
-            for (var i = 0; i < myRect.length; i++) {
-                if (myRect[i].id == 1) {
-                    myRect[i].id = 0;
-                }
             }
         }
         // Keybindings 
@@ -161,9 +153,6 @@
                     opponentPositionIndex = myRect[i].index;
                 }
             }
-
-            playerPositionIndex = playerPositionIndex - 1; //because array is from 0 to 8
-            opponentPositionIndex = opponentPositionIndex - 1; // because of thing above this text
             
             switch (newDirection) {
                 case 'left':
